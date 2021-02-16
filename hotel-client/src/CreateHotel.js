@@ -7,13 +7,11 @@ class CreateHotel extends Component {
     this.state = {
       id: "",
       name: "",
-      role: "",
-      birth: "",
-      employmentYear: "",
-      salary: "",
-      team: "",
-      teams: [], //deklaracija selekta, dropdown
-      // errors: []
+      openingYear: "",
+      employeesNumber: "",
+      numberOfRooms: "",
+      hotelChain: "",
+      hotelChains: [],
     };
 
     this.handleSelectChange = this.handleSelectChange.bind(this);
@@ -22,59 +20,57 @@ class CreateHotel extends Component {
   handleCancel = () => {
     this.setState({
       name: "",
-      role: "",
-      birth: "",
-      employmentYear: "",
-      salary: "",
-      team: "",
+      openingYear: "",
+      employeesNumber: "",
+      numberOfRooms: "",
+      hotelChain: "",
     });
   };
 
   handleSubmit = (event) => {
     event.preventDefault();
-    axios("https://localhost:44311/api//Employee/", {
+    axios("https://localhost:44360/api//Hotels/", {
       method: "POST",
       headers: { Authorization: "Bearer " + sessionStorage.getItem("token") },
       data: {
-        TeamId: this.state.team,
-        Role: this.state.role,
         Name: this.state.name,
-        Birth: this.state.birth,
-        EmploymentYear: this.state.employmentYear,
-        Salary: this.state.salary,
+        OpeningYear: this.state.openingYear,
+        EmployeesNumber: this.state.employeesNumber,
+        NumberOfRooms: this.state.numberOfRooms,
+        HotelChainId: this.state.hotelChain,
       },
     })
-      .then(() => alert("Added successful!"))
+      .then(() => alert("Create successful!"))
       .then(() => {
         window.location.reload();
       })
 
       .catch(() => {
-        alert("Adding failed! ");
+        alert("Create failed! ");
       });
   };
 
   handleChange = (event) => {
     const { value, name } = event.target;
     this.setState({ [name]: value });
-  }; //setuj vrednost za input u formi
+  };
 
   handleSelectChange(event) {
-    this.setState({ team: event.target.value });
-  } //setuj vrednost za dropdown
+    this.setState({ hotelChain: event.target.value });
+  }
 
   componentDidMount() {
-    fetch("https://localhost:44311/api/Teams/", { method: "GET" })
+    fetch("https://localhost:44360/api/Hotels/", { method: "GET" })
       .then((response) => response.json())
       .then((data) => {
-        console.log(this.state.team);
+        console.log(this.state.hotelChain);
 
-        this.setState({ teams: data });
+        this.setState({ hotelChains: data });
       });
-  } //dobavljanje timova za selekt
+  }
 
   render() {
-    const options = this.state.teams.map((x) => (
+    const options = this.state.hotelChains.map((x) => (
       <option value={x.Id} key={x.Id} className="form-control">
         {" "}
         {x.Name}{" "}
@@ -91,21 +87,24 @@ class CreateHotel extends Component {
               textAlign: "center",
             }}
           >
-            Add employee
+            Add hotel
           </h5>
 
           <div className="form-inline">
             <label className="control-label col-sm-pull-2">
               {" "}
-              <strong> Team: </strong>{" "}
+              <strong> Hotel chain: </strong>{" "}
             </label>
             <div className="col-sm-6">
               <select
-                style={{ width: "170%", marginLeft: "40px" }}
-                name="team"
+                style={{
+                  width: "160%",
+                  marginLeft: "40px",
+                }}
+                name="hotelChain"
                 className="form-control"
                 onChange={this.handleSelectChange}
-                value={this.state.team}
+                value={this.state.hotelChain}
               >
                 [{options}]
               </select>
@@ -115,32 +114,11 @@ class CreateHotel extends Component {
           <div className="form-inline">
             <label className="control-label col-sm-pull-4">
               {" "}
-              <strong> Role: </strong>{" "}
-            </label>
-            <div className="col-sm-6">
-              <input
-                style={{ width: "140%", marginLeft: "95px" }}
-                type="text"
-                className="form-control"
-                name="role"
-                value={this.state.role}
-                onChange={this.handleChange}
-                required
-                minLength="3"
-                maxLength="30"
-              />
-            </div>
-          </div>
-
-          <br />
-          <div className="form-inline">
-            <label className="control-label col-sm-pull-4">
-              {" "}
               <strong> Name: </strong>{" "}
             </label>
             <div className="col-sm-6">
               <input
-                style={{ width: "140%", marginLeft: "84px" }}
+                style={{ width: "152%", marginLeft: "98px" }}
                 type="text"
                 className="form-control"
                 name="name"
@@ -148,7 +126,7 @@ class CreateHotel extends Component {
                 onChange={this.handleChange}
                 required
                 minLength="3"
-                maxLength="60"
+                maxLength="75"
               />
             </div>
           </div>
@@ -157,19 +135,19 @@ class CreateHotel extends Component {
           <div className="form-inline">
             <label className="control-label col-sm-pull-4">
               {" "}
-              <strong> Birth: </strong>{" "}
+              <strong> Year of opening: </strong>{" "}
             </label>
             <div className="col-sm-6">
               <input
-                style={{ width: "75%", marginLeft: "185px" }}
+                style={{ width: "105%", marginLeft: "118px" }}
                 type="number"
                 className="form-control"
-                name="birth"
-                value={this.state.birth}
+                name="openingYear"
+                value={this.state.openingYear}
                 onChange={this.handleChange}
                 required
-                min="1960"
-                max="1998"
+                min="1950"
+                max="2021"
               />
             </div>
           </div>
@@ -178,19 +156,19 @@ class CreateHotel extends Component {
           <div className="form-inline">
             <label className="control-label col-sm-pull-4">
               {" "}
-              <strong> Employment year: </strong>{" "}
+              <strong> Number of employees: </strong>{" "}
             </label>
-            <div className="col-sm-6">
+            <div className="col-sm-5">
               <input
-                style={{ width: "75%", marginLeft: "91px" }}
+                style={{ width: "75%", marginLeft: "159px" }}
                 type="number"
                 className="form-control"
-                name="employmentYear"
-                value={this.state.employmentYear}
+                name="employeesNumber"
+                value={this.state.employeesNumber}
                 onChange={this.handleChange}
                 required
-                min="2001"
-                max="2020"
+                min="2"
+                max="9999"
               />
             </div>
           </div>
@@ -199,20 +177,19 @@ class CreateHotel extends Component {
           <div className="form-inline">
             <label className="control-label col-sm-pull-4">
               {" "}
-              <strong> Salary: </strong>{" "}
+              <strong>Number of rooms: </strong>{" "}
             </label>
             <div className="col-sm-6">
               <input
-                style={{ width: "75%", marginLeft: "178px" }}
+                style={{ width: "75%", marginLeft: "161px" }}
                 type="number"
                 className="form-control"
-                name="salary"
-                value={this.state.salary}
+                name="numberOfRooms"
+                value={this.state.numberOfRooms}
                 onChange={this.handleChange}
                 required
-                min="2001"
-                max="2020"
-                step="0.1"
+                min="10"
+                max="999"
               />
             </div>
           </div>

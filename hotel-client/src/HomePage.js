@@ -14,7 +14,7 @@ class HomePage extends React.Component {
     return (
       <div>
         {sessionStorage.getItem("token") ? (
-          <h3 style={{ backgroundColor: "darkred" }}>
+          <h3 style={{ backgroundColor: "darkred", color: "white" }}>
             Registered user: {sessionStorage.getItem("user")}
           </h3>
         ) : (
